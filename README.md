@@ -8,6 +8,6 @@ flag -O3 optimized it to run so faster
 
 ## Results
 <p align="center">
-  <img src=res/"bear.png" width="560">
+  <img src="res/bear.png" width="560">
 </p>
 
