@@ -1,4 +1,4 @@
-### Ray Tracer
+## Full Ray Tracer
 This project is about rendering complex scenes with multiple geometry types, lighting models, and reflections. The journey involved solving several challenges.
 All outputs match the provided reference images except the dragon. 
 
