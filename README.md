@@ -15,6 +15,7 @@ flag -O3 optimized it to run so faster
 
 
 ## Results
+# Bottle
 <p align="center">
   <img src="res/bottle.png" width="560">
 </p>
@@ -98,3 +99,11 @@ Smooth Shading with Per-Vertex Normals
 ## References 
 https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/shading-normals.html
 https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection.html
+
+# Holoween Plan
+Spend Holoween at the MIT Visual Arts Center! 
+
+<p align="center">
+  <img src="mit.png" width="280">
+</p>
+
