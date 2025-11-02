@@ -32,7 +32,7 @@ flag -O3 optimized it to run so faster
 
 # Foo slow
 <p align="center">
-  <img src="res/foo_slow.png" width="560">
+  <img src="res/foo-slow.png" width="560">
 </p>
 
 # Gear
