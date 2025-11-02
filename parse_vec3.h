@@ -34,7 +34,7 @@ int maxDepth = 5;
 std::vector<Sphere> spheres;
 std::vector<Triangle> triangles;
 std::vector<vec3> vertices;
-std::vector<vec3> normals;  // Per-vertex normals
+std::vector<vec3> normals; 
 vec3 ambientLight = vec3(0,0,0);
 std::vector<PointLight> pointLights;
 std::vector<DirectionalLight> directionalLights;
@@ -64,7 +64,7 @@ struct Sphere {
 
 struct Triangle {
     int v0, v1, v2;  // Vertex indices
-    int n0, n1, n2;  // Normal indices (-1 if not using per-vertex normals)
+    int n0, n1, n2;  // normal indices 
     Material material;
     
     Triangle(int a, int b, int c) : v0(a), v1(b), v2(c), n0(-1), n1(-1), n2(-1), material() {}
@@ -104,14 +104,12 @@ void parseSceneFile(std::string fileName){
     std::string line;
     
     while (std::getline(file, line)) {
-        // Skip empty lines and comments
         if (line.empty() || line[0] == '#') continue;
         
         std::istringstream iss(line);
         std::string command;
         iss >> command;
         
-        // Remove trailing colon if present
         if (!command.empty() && command.back() == ':') {
             command.pop_back();
         }

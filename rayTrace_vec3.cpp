@@ -1,17 +1,27 @@
-//CSCI 5607 Ray Tracer with Triangles
-//To Compile: g++ -std=c++11 -O2 rayTrace_vec3.cpp -o raytracer
+//CSCI 5607 HW3 - Rays & Files
+//This HW has three steps:
+// 1. Compile and run the program (the program takes a single command line argument)
+// 2. Understand the code in this file (rayTrace_vec3.cpp), in particular be sure to understand:
+//     -How ray-sphere intersection works
+//     -How the rays are being generated
+//     -The pipeline from rays, to intersection, to pixel color
+//    After you finish this step, and understand the math, take the HW quiz on canvas
+// 3. Update the file parse_vec3.h so that the function parseSceneFile() reads the passed in file
+//     and sets the relevant global variables for the rest of the code to product to correct image
+
+//To Compile: g++ -fsanitize=address -std=c++11 rayTrace_vec3.cpp
 
 #ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS // For fopen and sscanf
 #define _USE_MATH_DEFINES 
 #endif
 
 //Images Lib includes:
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "image_lib.h"
+#define STB_IMAGE_IMPLEMENTATION //only place once in one .cpp file
+#define STB_IMAGE_WRITE_IMPLEMENTATION //only place once in one .cpp files
+#include "image_lib.h" //Defines an image class and a color class
 
-//Vec3 Library
+//#Vec3 Library
 #include "vec3.h"
 
 //High resolution timer
@@ -76,7 +86,7 @@ HitInfo raySphereIntersect(const Ray& ray, const Sphere& sphere) {
     return info;
 }
 
-// Ray-Triangle Intersection using Möller-Trumbore algorithm
+// Ray-Triangle Intersection
 HitInfo rayTriangleIntersect(const Ray& ray, const Triangle& tri) {
     HitInfo info;
     
@@ -117,7 +127,7 @@ HitInfo rayTriangleIntersect(const Ray& ray, const Triangle& tri) {
         info.t = t;
         info.point = ray.origin + t * ray.direction;
         
-        // Use per-vertex normals if available (smooth shading)
+        // smooth shading
         if (tri.n0 >= 0 && tri.n1 >= 0 && tri.n2 >= 0) {
             // Interpolate normals using barycentric coordinates
             float w = 1.0f - u - v;  // Barycentric coordinate for v0
@@ -126,10 +136,8 @@ HitInfo rayTriangleIntersect(const Ray& ray, const Triangle& tri) {
             vec3 n2 = normals[tri.n2];
             info.normal = (w * n0 + u * n1 + v * n2).normalized();
         } else {
-            // Flat shading: use face normal
             info.normal = cross(edge1, edge2).normalized();
             
-            // Make triangle double-sided: flip normal if it points away from ray
             if (dot(info.normal, ray.direction) > 0) {
                 info.normal = -1.0f * info.normal;
             }
@@ -171,7 +179,7 @@ vec3 shade(const HitInfo& hit, const Ray& ray, int depth);
 
 // Phong shading
 vec3 computePhong(const HitInfo& hit, const vec3& viewDir) {
-    // Ambient component - only if material has ambient term
+    // Ambient component
     vec3 color = vec3(
         hit.material.ambient.x * ambientLight.x,
         hit.material.ambient.y * ambientLight.y,
@@ -191,10 +199,7 @@ vec3 computePhong(const HitInfo& hit, const vec3& viewDir) {
                 hit.material.diffuse.x * light.color.x * diff,
                 hit.material.diffuse.y * light.color.y * diff,
                 hit.material.diffuse.z * light.color.z * diff
-            );
-            
-            // Note: Specular highlights removed - specular controls reflections only
-            
+            );            
             float attenuation = 1.0f / (lightDist * lightDist);
             color = color + attenuation * diffuse;
         }
@@ -211,10 +216,7 @@ vec3 computePhong(const HitInfo& hit, const vec3& viewDir) {
                 hit.material.diffuse.x * light.color.x * diff,
                 hit.material.diffuse.y * light.color.y * diff,
                 hit.material.diffuse.z * light.color.z * diff
-            );
-            
-            // Note: Specular highlights removed - specular controls reflections only
-            
+            );            
             color = color + diffuse;
         }
     }
@@ -240,10 +242,7 @@ vec3 computePhong(const HitInfo& hit, const vec3& viewDir) {
                     hit.material.diffuse.x * light.color.x * diff,
                     hit.material.diffuse.y * light.color.y * diff,
                     hit.material.diffuse.z * light.color.z * diff
-                );
-                
-                // Note: Specular highlights removed - specular controls reflections only
-                
+                );                
                 float attenuation = 1.0f / (lightDist * lightDist);
                 color = color + attenuation * diffuse;
             }
@@ -259,7 +258,7 @@ vec3 shade(const HitInfo& hit, const Ray& ray, int depth) {
     vec3 viewDir = -1.0f * ray.direction;
     vec3 color = computePhong(hit, viewDir);
     
-    // Reflection - use BOTH transmissive AND specular
+    // Reflection 
     vec3 reflectCoeff = vec3(
         hit.material.transmissive.x + hit.material.specular.x,
         hit.material.transmissive.y + hit.material.specular.y,
@@ -303,7 +302,6 @@ vec3 traceRay(const Ray& ray, int depth) {
 }
 
 int main(int argc, char** argv){
-    // Read command line parameters to get scene file
     if (argc != 2){
         std::cout << "Usage: " << argv[0] << " <scenefile>\n";
         std::cout << "Example: " << argv[0] << " triangle.txt\n";
@@ -311,7 +309,6 @@ int main(int argc, char** argv){
     }
     std::string sceneFileName = argv[1];
 
-    // Parse Scene File
     parseSceneFile(sceneFileName);
 
     float imgW = img_width, imgH = img_height;
@@ -329,7 +326,6 @@ int main(int argc, char** argv){
         }
         
         for (int j = 0; j < img_height; j++){
-            // Fix: negate u to correct left/right flip
             float u = -1.0f * (halfW - (imgW)*((i+0.5)/imgW));
             float v = (halfH - (imgH)*((j+0.5)/imgH));
             vec3 p = eye - d*forward + u*right + v*up;
