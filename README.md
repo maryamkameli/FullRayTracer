@@ -88,9 +88,9 @@ flag -O3 optimized it to run so faster
 ## Implemented Features 
 | Feature | Status |
 |---------|--------|
-| Complex Lighting | ✅ Complete | 
-| Spot Lights | ✅ Complete | 
-| HDR Support | ⚠️ Partial |
+| Complex Lighting | Complete | 
+| Spot Lights | Complete | 
+| HDR Support | Partial |
 
 # Bonus Implementation
 Smooth Shading with Per-Vertex Normals
