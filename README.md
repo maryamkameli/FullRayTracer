@@ -104,6 +104,6 @@ https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a
 Spend Holoween at the MIT Visual Arts Center! 
 
 <p align="center">
-  <img src="mit.png" width="280">
+  <img src="mit.jpeg" width="280">
 </p>
 
